@@ -7,7 +7,6 @@
 #include "Logger.h"
 #include "Overlay.h"
 #include "HookManager.h"
+#include "ModuleManager.h"
 
 #define GC_NAME "EasyPeasy-GC"
-
-extern Overlay* overlay;

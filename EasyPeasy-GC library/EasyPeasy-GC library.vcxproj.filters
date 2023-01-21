@@ -63,6 +63,9 @@
     <ClCompile Include="Src\Window Hooks.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="Src\ModuleManager.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -125,7 +128,13 @@
     <ClInclude Include="Src\ImGUI\imgui_memory_editor.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Src\FPS.h">
+    <ClInclude Include="Src\Modules\FPS.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\ModuleManager.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\IModule.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

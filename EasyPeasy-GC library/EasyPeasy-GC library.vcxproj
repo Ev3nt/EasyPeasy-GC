@@ -197,6 +197,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Src\Logger.cpp" />
+    <ClCompile Include="Src\ModuleManager.cpp" />
     <ClCompile Include="Src\Overlay.cpp" />
     <ClCompile Include="Src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -213,7 +214,9 @@
   <ItemGroup>
     <ClInclude Include="Src\D3D11 Hooks.h" />
     <ClInclude Include="Src\Detours.h" />
-    <ClInclude Include="Src\FPS.h" />
+    <ClInclude Include="Src\IModule.h" />
+    <ClInclude Include="Src\ModuleManager.h" />
+    <ClInclude Include="Src\Modules\FPS.h" />
     <ClInclude Include="Src\fp_call.h" />
     <ClInclude Include="Src\HookManager.h" />
     <ClInclude Include="Src\ImGUI\imconfig.h" />

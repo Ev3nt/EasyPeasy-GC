@@ -4,6 +4,7 @@
 #include "D3D11 Hooks.h"
 #include "Window Hooks.h"
 #include "ImGUI/imgui_impl_dx11.h"
+#include "ModuleManager.h"
 
 namespace D3D11 {
 	inline static ID3D11Device* n_device = nullptr;
@@ -31,7 +32,7 @@ namespace D3D11 {
 	}
 
 	HRESULT WINAPI Present(IDXGISwapChain* swapChain, UINT syncInterval, UINT flags) {
-		if (!overlay) {
+		if (!Overlay::IsCreated()) {
 			LOG_INFO("Initializing ImGUI...");
 
 			if (SUCCEEDED(swapChain->GetDevice(__uuidof(n_device), (PVOID*)&n_device))) {
@@ -42,25 +43,26 @@ namespace D3D11 {
 				HWND wnd = desc.OutputWindow;
 
 				CreateRenderTarget(swapChain);
-				overlay = new Overlay(wnd, n_device, n_deviceContext, swapChain);
+				Overlay::Create(wnd, n_device, n_deviceContext, swapChain);
 				Window::SetProcessWindow(wnd);
 				Window::SetWindowHooksState(true);
 			}
 		} else {
 			n_deviceContext->OMSetRenderTargets(1, &n_renderTargetView, NULL);
-			overlay->Render();
+			Overlay::Render();
 		}
 
 		return HookManager::Invoke(Present, swapChain, syncInterval, flags);
 	}
 
 	HRESULT WINAPI ResizeBuffers(IDXGISwapChain* swapChain, UINT bufferCount, UINT width, UINT height, DXGI_FORMAT newFormat, UINT swapChainFlags) {
-		if (overlay) {
+		bool isCreated = Overlay::IsCreated();
+		if (isCreated) {
 			ImGui_ImplDX11_InvalidateDeviceObjects();
 			CleanupRenderTarget();
 		}
 		HRESULT result = HookManager::Invoke(ResizeBuffers, swapChain, bufferCount, width, height, newFormat, swapChainFlags);
-		if (overlay) {
+		if (isCreated) {
 			CreateRenderTarget(swapChain);
 			ImGui_ImplDX11_CreateDeviceObjects();
 		}

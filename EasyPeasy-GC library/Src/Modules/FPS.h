@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Overlay.h"
+#include "../IModule.h"
 
-class FPS : public IOverlayModule {
+class FPS : public IModule {
 	std::string m_name;
 public:
 	MODULE_CONSTRUCTOR(FPS, m_name) {}
 
-	void Update(bool isDisplay) {
+	void Update() {
 		ImGui::Begin("FPS", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings);
 		ImGui::Text("FPS: %f", ImGui::GetIO().Framerate);
 		ImGui::End();

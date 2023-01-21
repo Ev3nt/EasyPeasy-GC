@@ -9,13 +9,13 @@ namespace Window {
 	LRESULT WINAPI WndProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		bool status = false;
 
-		overlay ? status = overlay->WndProc(wnd, msg, wParam, lParam) : false;
+		Overlay::IsCreated() ? status = Overlay::WndProc(wnd, msg, wParam, lParam) : false;
 
 		return status ? DefWindowProc(wnd, msg, wParam, lParam) : CallWindowProc(n_wndProc, wnd, msg, wParam, lParam);
 	}
 
 	BOOL WINAPI ClipCursor(const RECT* lpRect) {
-		return HookManager::Invoke(ClipCursor, overlay && overlay->IsShown() ? NULL : lpRect);
+		return HookManager::Invoke(ClipCursor, Overlay::IsShown() ? NULL : lpRect);
 	}
 
 	void SetProcessWindow(HWND wnd) {

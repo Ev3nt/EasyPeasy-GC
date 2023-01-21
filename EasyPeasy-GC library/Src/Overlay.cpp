@@ -1,17 +1,22 @@
 #include "pch.h"
 
 #include "Overlay.h"
+#include "ImGUI/imgui.h"
 #include "ImGUI/imgui_impl_dx11.h"
 #include "ImGUI/imgui_impl_win32.h"
 #include "ImGUI/imgui_memory_editor.h"
 
-#include "FPS.h"
-
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-Overlay* overlay = nullptr;
+void Overlay::Create(HWND wnd, ID3D11Device* device, ID3D11DeviceContext* deviceContext, IDXGISwapChain* swapChain) {
+    if (m_device) {
+        LOG_ERROR(Utils::format(R"(Attempt to create existing "%s")", __FUNCTION__));
 
-Overlay::Overlay(HWND wnd, ID3D11Device* device, ID3D11DeviceContext* deviceContext, IDXGISwapChain* swapChain): m_device(device), m_deviceContext(deviceContext), m_swapChain(swapChain) {
+        return;
+    }
+
+    m_device = device, m_deviceContext = deviceContext, m_swapChain = swapChain, m_created = true;
+
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
@@ -24,28 +29,28 @@ Overlay::Overlay(HWND wnd, ID3D11Device* device, ID3D11DeviceContext* deviceCont
     ImGui_ImplWin32_Init(wnd);
     ImGui_ImplDX11_Init(m_device, m_deviceContext);
 
-    AddModule<FPS>();
+    ModuleManager::Init();
 }
 
-Overlay::~Overlay() {
+void Overlay::Destroy() {
     ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
 }
 
-template <typename Module>
-void Overlay::AddModule() {
-    auto module = std::unique_ptr<IOverlayModule>(new Module);
-    const std::string& name = module.get()->GetName();
-
-    if (!m_modules.count(name)) {
-        m_modules[name] = std::move(module);
-
-        return;
-    }
-
-    LOG_WARNING(Utils::format(R"(Attempt to add existing module "%s")", name.data()));
-}
+//template <typename Module>
+//void Overlay::AddModule() {
+//    auto module = std::unique_ptr<IOverlayModule>(new Module);
+//    const std::string& name = module.get()->GetName();
+//
+//    if (!m_modules.count(name)) {
+//        m_modules[name] = std::move(module);
+//
+//        return;
+//    }
+//
+//    LOG_WARNING(Utils::format(R"(Attempt to add existing module "%s")", name.data()));
+//}
 
 void Overlay::Render() {
     ImGui_ImplDX11_NewFrame();
@@ -57,22 +62,15 @@ void Overlay::Render() {
 
     // Overlay
 
-    for (const auto& module : m_modules) {
-        module.second.get()->Update(m_display);
-    }
-
     if (m_display) {
         if (ImGui::Begin("Example", nullptr, ImGuiWindowFlags_NoScrollbar)) {
-            ImGuiListClipper clipper;
-            clipper.Begin(10, ImGui::GetTextLineHeight());
             
-            while (clipper.Step()) {
-                ImGui::Text("Salam");
-            }
         }
 
         ImGui::End();
     }
+
+    ModuleManager::Update();
 
     if (ImGui::IsKeyPressed(ImGuiKey_Insert)) {
         static RECT rect{};
@@ -104,4 +102,8 @@ void Overlay::Show(bool state) {
 
 bool Overlay::IsShown() {
     return m_display;
+}
+
+bool Overlay::IsCreated() {
+    return m_created;
 }

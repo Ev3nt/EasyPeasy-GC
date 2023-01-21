@@ -10,3 +10,4 @@
 #include "ModuleManager.h"
 
 #define GC_NAME "EasyPeasy-GC"
+#define GC_CONFIG GC_NAME".json"

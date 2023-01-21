@@ -3,9 +3,9 @@
 #include "ModuleManager.h"
 
 #include "Modules/FPS.h"
+#include "Modules/MainWindow.h"
 
 void ModuleManager::Init() {
-	Add<FPS>("overlay");
-	Add<StatusDisplay>("overlay");
-	Add<StatusDisplayFPS>("StatusDisplay");
+	Add<FPS>();
+	Add<MainWindow>();
 }

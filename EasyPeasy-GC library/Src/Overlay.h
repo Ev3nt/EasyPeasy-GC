@@ -2,6 +2,7 @@
 
 #include <d3d11.h>
 #include <map>
+#include "json.hpp"
 
 class Overlay {
 	inline static ID3D11Device* m_device = nullptr;
@@ -13,6 +14,11 @@ class Overlay {
 public:
 	static void Create(HWND wnd, ID3D11Device* device, ID3D11DeviceContext* deviceContext, IDXGISwapChain* swapChain);
 	static void Destroy();
+
+	inline static nlohmann::json config;
+	static void SaveConfig();
+
+	static UINT GetID();
 
 	static void Render();
 	static bool WndProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam);

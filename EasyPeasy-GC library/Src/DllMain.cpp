@@ -20,6 +20,7 @@ BOOL APIENTRY DllMain(HMODULE module, UINT reason, LPVOID reserved) {
 
 		break;
 	case DLL_PROCESS_DETACH:
+		Overlay::Destroy();
 
 		break;
 	}

@@ -215,6 +215,7 @@
     <ClInclude Include="Src\D3D11 Hooks.h" />
     <ClInclude Include="Src\Detours.h" />
     <ClInclude Include="Src\IModule.h" />
+    <ClInclude Include="Src\json.hpp" />
     <ClInclude Include="Src\ModuleManager.h" />
     <ClInclude Include="Src\Modules\FPS.h" />
     <ClInclude Include="Src\fp_call.h" />
@@ -230,6 +231,7 @@
     <ClInclude Include="Src\ImGUI\imgui_memory_editor.h" />
     <ClInclude Include="Src\kiero.h" />
     <ClInclude Include="Src\Logger.h" />
+    <ClInclude Include="Src\Modules\MainWindow.h" />
     <ClInclude Include="Src\Overlay.h" />
     <ClInclude Include="Src\pch.h" />
     <ClInclude Include="Src\Utils.h" />

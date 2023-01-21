@@ -23,7 +23,7 @@ int main() {
 			throw std::string("Couldn't open file");
 		}
 
-		config = nlohmann::json::parse(file, NULL, false, false);
+		config = nlohmann::json::parse(file, nullptr, false, false);
 		file.close();
 		
 		if (!config.is_object()) {

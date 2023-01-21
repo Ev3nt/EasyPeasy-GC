@@ -5,6 +5,7 @@
 #include "ImGUI/imgui_impl_dx11.h"
 #include "ImGUI/imgui_impl_win32.h"
 #include "ImGUI/imgui_memory_editor.h"
+#include <fstream>
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -16,6 +17,9 @@ void Overlay::Create(HWND wnd, ID3D11Device* device, ID3D11DeviceContext* device
     }
 
     m_device = device, m_deviceContext = deviceContext, m_swapChain = swapChain, m_created = true;
+    std::ifstream json(GC_CONFIG);
+    config = nlohmann::json::parse(json, nullptr, false, false);
+    json.close();
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -33,9 +37,34 @@ void Overlay::Create(HWND wnd, ID3D11Device* device, ID3D11DeviceContext* device
 }
 
 void Overlay::Destroy() {
+    if (!m_device) {
+        return;
+    }
+
+    m_device = nullptr, m_deviceContext = nullptr, m_swapChain = nullptr, m_created = false;
+
+    ModuleManager::Destroy();
+
+    Overlay::SaveConfig();
+    config.clear();
+
     ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
+}
+
+void Overlay::SaveConfig() {
+    if (config.empty()) {
+        return;
+    }
+
+    std::ofstream json(GC_CONFIG);
+    json << config.dump(4);
+    json.close();
+}
+
+UINT Overlay::GetID() {
+    return 0;
 }
 
 //template <typename Module>
@@ -62,15 +91,7 @@ void Overlay::Render() {
 
     // Overlay
 
-    if (m_display) {
-        if (ImGui::Begin("Example", nullptr, ImGuiWindowFlags_NoScrollbar)) {
-
-        }
-
-        ImGui::End();
-    }
-
-    ModuleManager::Update("overlay");
+    ModuleManager::Update();
 
     if (ImGui::IsKeyPressed(ImGuiKey_Insert)) {
         static RECT rect{};

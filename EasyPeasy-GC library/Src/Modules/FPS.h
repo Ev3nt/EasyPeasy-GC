@@ -3,36 +3,33 @@
 #include "../IModule.h"
 
 class FPS : public IModule {
+	std::string m_name = GetName();
 public:
-	FPS() {}
+	inline static bool show = false;
 
-	void Update() {
-		ImGui::Begin("FPS", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoTitleBar);
-		ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
-		ImGui::End();
+	FPS() {
+		show = Overlay::config[m_name]["Show"].is_boolean() ? Overlay::config[m_name]["Show"].get<bool>() : false;
 	}
-};
 
-class StatusDisplayFPS : public IModule {
-public:
-	StatusDisplayFPS() {}
-
-	void Update() {
-		ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
+	void Destroy() {
+		Overlay::config[m_name]["Show"] = show;
 	}
-};
 
-class StatusDisplay : public IModule {
-public:
-	StatusDisplay() { }
+	void Update(UINT ownerID) {
+		if (!show) {
+			return;
+		}
 
-	void Update() {
-		ImGui::Begin(GetName().data(), nullptr, ImGuiWindowFlags_NoSavedSettings);
-		
-		ImGui::Text(__MODULE_METHOD__);
+		bool isOverlay = ownerID == Overlay::GetID();
+		if (isOverlay) {
+			ImGui::Begin("FPS", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoTitleBar);
+			ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
+			ImGui::End();
+		}
+		else {
+			ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
+		}
 
-		ModuleManager::Update("StatusDisplay");
-
-		ImGui::End();
+		//Overlay::config["Show FPS"] = showFPS;
 	}
 };

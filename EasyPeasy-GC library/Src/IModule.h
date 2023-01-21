@@ -2,8 +2,12 @@
 
 #include <string>
 
+#define __MODULE_METHOD__ __func__
+
 class IModule {
 public:
 	virtual void Update() = 0;
-	virtual const std::string& GetName() = 0;
+	std::string GetName() const {
+		return &(typeid(*this).name()[6]);
+	}
 };

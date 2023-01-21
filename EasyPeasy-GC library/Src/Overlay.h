@@ -3,10 +3,6 @@
 #include <d3d11.h>
 #include <map>
 
-#define SPLIT_AFTER(str, sym) std::string(str).substr(std::string(str).find_last_of(sym) + 1)
-#define MODULE_CONSTRUCTOR(m, n) m(): n(__FUNCTION__)
-//#define MODULE_CONSTRUCTOR(m, n) m(): n(SPLIT_AFTER(__FUNCTION__, ":"))
-
 class Overlay {
 	inline static ID3D11Device* m_device = nullptr;
 	inline static ID3D11DeviceContext* m_deviceContext = nullptr;

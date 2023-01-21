@@ -64,13 +64,13 @@ void Overlay::Render() {
 
     if (m_display) {
         if (ImGui::Begin("Example", nullptr, ImGuiWindowFlags_NoScrollbar)) {
-            
+
         }
 
         ImGui::End();
     }
 
-    ModuleManager::Update();
+    ModuleManager::Update("overlay");
 
     if (ImGui::IsKeyPressed(ImGuiKey_Insert)) {
         static RECT rect{};
@@ -78,7 +78,7 @@ void Overlay::Render() {
             GetClipCursor(&rect);
         }
 
-        Show(!m_display);
+        m_display = !m_display;
 
         ClipCursor(&rect);
     }

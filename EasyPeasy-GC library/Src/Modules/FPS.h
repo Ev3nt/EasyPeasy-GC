@@ -3,17 +3,36 @@
 #include "../IModule.h"
 
 class FPS : public IModule {
-	std::string m_name;
 public:
-	MODULE_CONSTRUCTOR(FPS, m_name) {}
+	FPS() {}
 
 	void Update() {
-		ImGui::Begin("FPS", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings);
-		ImGui::Text("FPS: %f", ImGui::GetIO().Framerate);
+		ImGui::Begin("FPS", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoTitleBar);
+		ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
 		ImGui::End();
 	}
+};
 
-	const std::string& GetName() {
-		return m_name;
+class StatusDisplayFPS : public IModule {
+public:
+	StatusDisplayFPS() {}
+
+	void Update() {
+		ImGui::Text("FPS: %.2f", ImGui::GetIO().Framerate);
+	}
+};
+
+class StatusDisplay : public IModule {
+public:
+	StatusDisplay() { }
+
+	void Update() {
+		ImGui::Begin(GetName().data(), nullptr, ImGuiWindowFlags_NoSavedSettings);
+		
+		ImGui::Text(__MODULE_METHOD__);
+
+		ModuleManager::Update("StatusDisplay");
+
+		ImGui::End();
 	}
 };
